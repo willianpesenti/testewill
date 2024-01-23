@@ -54,6 +54,21 @@
             height: 10%; /* Altura da faixa inferior, ajuste conforme necessário */
             background-color: black;
         }
+
+        /* Botão de início do vídeo */
+        #start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            z-index: 9999; /* Define uma alta camada z-index para o botão ficar no topo */
+            pointer-events: auto; /* Permite cliques no botão */
+        }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -64,6 +79,7 @@
         <div id="player"></div>
         <div class="bottom-bar"></div> <!-- Faixa preta inferior -->
         <div id="overlay"></div> <!-- Elemento semitransparente -->
+        <button id="start-button" onclick="iniciarVideo()">Iniciar Vídeo</button>
     </div>
 
     <script>
@@ -86,6 +102,7 @@
                         'rel': 0,              // Impede vídeos relacionados no final
                         'fs': 0,               // Impede o botão de tela cheia
                         'disablekb': 1,        // Desativa o teclado
+                        'playsinline': 1       // Reprodução em linha para dispositivos móveis
                     },
                     events: {
                         'onReady': onPlayerReady,
@@ -105,17 +122,16 @@
         }
 
         function onPlayerReady(event) {
-            // Não é necessário iniciar a reprodução novamente aqui, pois o autoplay está sujeito a restrições do navegador.
-            event.target.setVolume(100); // Define o volume (opcional)
-            // Clique no overlay para iniciar a reprodução.
-            document.getElementById('overlay').addEventListener('click', function() {
-                event.target.playVideo();
-                // Remova o overlay após iniciar a reprodução.
-                document.getElementById('overlay').style.display = 'none';
-            });
+            // Exibir o botão de início do vídeo
+            document.getElementById('start-button').style.display = 'block';
         }
 
         function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                // Remover a camada semitransparente e o botão após iniciar a reprodução
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('start-button').style.display = 'none';
+            }
             if (event.data === YT.PlayerState.ENDED) {
                 playNextVideo();
             }
@@ -130,12 +146,15 @@
             player.loadVideoById(getVideoId(videos[currentIndex]));
         }
 
-        // ... Resto do código ...
-
-        // Obtenha a lista de vídeos
+        // Função para obter a lista de vídeos
         function obterListaVideos() {
             var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
             return lista;
+        }
+
+        // Função para iniciar o vídeo manualmente e ocultar o botão
+        function iniciarVideo() {
+            player.playVideo();
         }
     </script>
 </body>
