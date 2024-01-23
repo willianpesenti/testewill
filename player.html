@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PLAYER</title>
+    <style>
+        /* CSS para o fundo preto e remoção do texto "PLAYER DE VÍDEOS" */
+        body {
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #player-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <h1 style="color: white;">Vídeo em Tela Cheia</h1>
+    <div id="player-container">
+        <div id="player"></div>
+    </div>
+
+    <script>
+        var player;
+        var currentIndex = 0;
+        var videos;
+
+        function onYouTubeIframeAPIReady() {
+            videos = obterListaVideos();
+
+            if (videos.length > 0) {
+                player = new YT.Player('player', {
+                    height: '360',
+                    width: '640',
+                    videoId: getVideoId(videos[currentIndex]),
+                    playerVars: {
+                        'controls': 0,         // Oculta os controles do YouTube
+                        'modestbranding': 1,   // Remove o logotipo do YouTube
+                        'showinfo': 0,         // Oculta informações do vídeo
+                        'rel': 0,              // Impede vídeos relacionados no final
+                        'fs': 0,               // Impede o botão de tela cheia
+                        'disablekb': 1,        // Desativa o teclado
+                        'autoplay': 1          // Inicia a reprodução automaticamente
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+        }
+
+        function getVideoId(url) {
+            var videoId = url.split('v=')[1];
+            var ampersandPosition = videoId.indexOf('&');
+            if (ampersandPosition !== -1) {
+                videoId = videoId.substring(0, ampersandPosition);
+            }
+            return videoId;
+        }
+
+        function onPlayerReady(event) {
+            // Não é necessário iniciar a reprodução novamente aqui, pois o autoplay está ativado
+            event.target.setVolume(100); // Define o volume (opcional)
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                playNextVideo();
+            }
+        }
+
+        function playNextVideo() {
+            currentIndex++;
+            if (currentIndex >= videos.length) {
+                currentIndex = 0; // Reinicia a lista após o último vídeo
+                videos = obterListaVideos(); // Recarrega a lista de vídeos
+            }
+            player.loadVideoById(getVideoId(videos[currentIndex]));
+        }
+
+        // ... Resto do código ...
+
+        // Obtenha a lista de vídeos
+        function obterListaVideos() {
+            var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
+            return lista;
+        }
+    </script>
+</body>
+</html>
