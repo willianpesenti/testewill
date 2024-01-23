@@ -46,7 +46,9 @@
                 var itemLista = document.createElement('li');
                 itemLista.innerHTML = `
                     <a href="${video}" target="_blank">${video}</a>
-                    <button onclick="excluirVideo(${index})">Excluir</button>
+                    <button class="move-up" onclick="moverVideo(${index}, -1)">▲</button>
+                    <button class="move-down" onclick="moverVideo(${index}, 1)">▼</button>
+                    <button class="delete-button" onclick="excluirVideo(${index})">Excluir</button>
                 `;
                 lista.appendChild(itemLista);
             });
@@ -60,7 +62,38 @@
             }
         }
 
+        function moverVideo(index, direction) {
+            if (index >= 0 && index < listaVideos.length) {
+                var newIndex = index + direction;
+                if (newIndex >= 0 && newIndex < listaVideos.length) {
+                    var movedItem = listaVideos.splice(index, 1)[0];
+                    listaVideos.splice(newIndex, 0, movedItem);
+                    salvarListaVideos(listaVideos);
+                    exibirLista();
+                }
+            }
+        }
+
         exibirLista();
     </script>
+    
+    <style>
+        .move-up,
+        .move-down {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
 </body>
 </html>
