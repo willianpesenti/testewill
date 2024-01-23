@@ -16,11 +16,23 @@
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none; /* Desativa a interação com o container de vídeo */
         }
 
         #player {
             width: 100%;
             height: 100%;
+        }
+
+        /* Elemento semitransparente para bloquear a interação */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Define a cor e a transparência desejadas */
+            pointer-events: auto; /* Torna o overlay interativo (bloqueia a interação com o vídeo) */
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -29,6 +41,7 @@
     <h1 style="color: white;">Vídeo em Tela Cheia</h1>
     <div id="player-container">
         <div id="player"></div>
+        <div id="overlay"></div> <!-- Elemento semitransparente -->
     </div>
 
     <script>
@@ -51,7 +64,6 @@
                         'rel': 0,              // Impede vídeos relacionados no final
                         'fs': 0,               // Impede o botão de tela cheia
                         'disablekb': 1,        // Desativa o teclado
-                        'autoplay': 1          // Inicia a reprodução automaticamente
                     },
                     events: {
                         'onReady': onPlayerReady,
@@ -71,8 +83,14 @@
         }
 
         function onPlayerReady(event) {
-            // Não é necessário iniciar a reprodução novamente aqui, pois o autoplay está ativado
+            // Não é necessário iniciar a reprodução novamente aqui, pois o autoplay está sujeito a restrições do navegador.
             event.target.setVolume(100); // Define o volume (opcional)
+            // Clique no overlay para iniciar a reprodução.
+            document.getElementById('overlay').addEventListener('click', function() {
+                event.target.playVideo();
+                // Remova o overlay após iniciar a reprodução.
+                document.getElementById('overlay').style.display = 'none';
+            });
         }
 
         function onPlayerStateChange(event) {
