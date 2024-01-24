@@ -17,22 +17,12 @@
     <ul id="lista-videos"></ul>
 
     <script>
-        function carregarListaVideos() {
-            var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
-            return lista;
-        }
-
-        function salvarListaVideos(lista) {
-            localStorage.setItem('listaVideos', JSON.stringify(lista));
-        }
-
-        var listaVideos = carregarListaVideos();
+        var listaVideos = [];
 
         function adicionarVideo() {
             var link = document.getElementById('video-link').value;
             if (link) {
                 listaVideos.push(link);
-                salvarListaVideos(listaVideos);
                 exibirLista();
                 document.getElementById('video-link').value = '';
             }
@@ -57,7 +47,6 @@
         function excluirVideo(index) {
             if (index >= 0 && index < listaVideos.length) {
                 listaVideos.splice(index, 1);
-                salvarListaVideos(listaVideos);
                 exibirLista();
             }
         }
@@ -68,14 +57,14 @@
                 if (newIndex >= 0 && newIndex < listaVideos.length) {
                     var movedItem = listaVideos.splice(index, 1)[0];
                     listaVideos.splice(newIndex, 0, movedItem);
-                    salvarListaVideos(listaVideos);
                     exibirLista();
                 }
             }
         }
 
         function salvarLista() {
-            salvarListaVideos(listaVideos);
+            // Aqui você pode adicionar o código para salvar a lista em algum local,
+            // como em um arquivo ou em um servidor, se desejar.
         }
 
         exibirLista();
