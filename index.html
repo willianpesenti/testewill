@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ADM</title>
+    <title>Gerenciador de Vídeos</title>
 </head>
 <body>
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
 
-    <!-- Botão "PLAYER" para abrir o arquivo player.html (caminho relativo) -->
-    <a href="player.html" target="_blank" class="player-button">PLAYER</a>
+    <a href="videos_lista.html" target="_blank" class="player-button">Lista de Vídeos</a>
 
     <button onclick="salvarLista()">Salvar Lista</button>
     
-    <!-- Lista de vídeos -->
     <ul id="lista-videos"></ul>
 
     <script>
@@ -36,7 +34,6 @@
                 listaVideos.push(link);
                 salvarListaVideos(listaVideos);
                 exibirLista();
-                atualizarListaVideos(); // Atualiza a lista em videos_lista.html
                 document.getElementById('video-link').value = '';
             }
         }
@@ -62,7 +59,6 @@
                 listaVideos.splice(index, 1);
                 salvarListaVideos(listaVideos);
                 exibirLista();
-                atualizarListaVideos(); // Atualiza a lista em videos_lista.html
             }
         }
 
@@ -74,22 +70,13 @@
                     listaVideos.splice(newIndex, 0, movedItem);
                     salvarListaVideos(listaVideos);
                     exibirLista();
-                    atualizarListaVideos(); // Atualiza a lista em videos_lista.html
                 }
             }
         }
 
         function salvarLista() {
-            // Nenhuma ação é necessária aqui, pois os dados já são salvos automaticamente no localStorage.
-        }
-
-        // Função para atualizar a lista em videos_lista.html
-        function atualizarListaVideos() {
-            var listaHtml = JSON.stringify(listaVideos);
-            var iframe = document.getElementById("videos-list-iframe");
-            if (iframe) {
-                iframe.contentWindow.postMessage(listaHtml, "*");
-            }
+            // Abrir a página videos_lista.html em uma nova guia ou janela
+            window.open('videos_lista.html', '_blank');
         }
 
         exibirLista();
@@ -113,7 +100,6 @@
             cursor: pointer;
         }
 
-        /* Estilos para os botões */
         .player-button {
             position: absolute;
             top: 10px;
