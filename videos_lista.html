@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Vídeos</title>
+</head>
+<body>
+    <h1>Lista de Vídeos</h1>
+    <ul id="lista-videos"></ul>
+    
+    <script>
+        // Função para carregar a lista de vídeos do armazenamento local
+        function carregarListaVideos() {
+            var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
+            return lista;
+        }
+
+        // Inicializar a lista de vídeos
+        var listaVideos = carregarListaVideos();
+
+        function exibirLista() {
+            var lista = document.getElementById('lista-videos');
+            lista.innerHTML = '';
+
+            listaVideos.forEach(function (video, index) {
+                var itemLista = document.createElement('li');
+                itemLista.innerHTML = `
+                    <a href="${video}" target="_blank">${video}</a>
+                `;
+                lista.appendChild(itemLista);
+            });
+        }
+
+        exibirLista();
+    </script>
+</body>
+</html>
