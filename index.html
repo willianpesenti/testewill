@@ -91,17 +91,10 @@
             var a = document.createElement('a');
             a.href = url;
             a.download = 'videos_lista.html';
+            a.style.display = 'none';
+            document.body.appendChild(a);
             a.click();
-
-            // Atualize o conteúdo do elemento "lista-videos" em videos_lista.html
-            var videosListaElement = document.getElementById('lista-videos');
-            videosListaElement.innerHTML = '';
-
-            listaVideos.forEach(function (video) {
-                var itemLista = document.createElement('li');
-                itemLista.innerHTML = `<a href="${video}" target="_blank">${video}</a>`;
-                videosListaElement.appendChild(itemLista);
-            });
+            document.body.removeChild(a);
         }
 
         exibirLista();
