@@ -36,6 +36,7 @@
                 listaVideos.push(link);
                 salvarListaVideos(listaVideos);
                 exibirLista();
+                atualizarListaVideos(); // Atualiza a lista em videos_lista.html
                 document.getElementById('video-link').value = '';
             }
         }
@@ -61,6 +62,7 @@
                 listaVideos.splice(index, 1);
                 salvarListaVideos(listaVideos);
                 exibirLista();
+                atualizarListaVideos(); // Atualiza a lista em videos_lista.html
             }
         }
 
@@ -72,12 +74,22 @@
                     listaVideos.splice(newIndex, 0, movedItem);
                     salvarListaVideos(listaVideos);
                     exibirLista();
+                    atualizarListaVideos(); // Atualiza a lista em videos_lista.html
                 }
             }
         }
 
         function salvarLista() {
             // Nenhuma ação é necessária aqui, pois os dados já são salvos automaticamente no localStorage.
+        }
+
+        // Função para atualizar a lista em videos_lista.html
+        function atualizarListaVideos() {
+            var listaHtml = JSON.stringify(listaVideos);
+            var iframe = document.getElementById("videos-list-iframe");
+            if (iframe) {
+                iframe.contentWindow.postMessage(listaHtml, "*");
+            }
         }
 
         exibirLista();
