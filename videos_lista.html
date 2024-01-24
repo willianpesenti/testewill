@@ -5,21 +5,13 @@
 </head>
 <body>
     <h1>Lista de Vídeos</h1>
-    <ul id="lista-videos"></ul>
+    <!-- Lista de vídeos será inserida aqui -->
     
     <script>
-        // Função para carregar a lista de vídeos do armazenamento local
-        function carregarListaVideos() {
-            var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
-            return lista;
-        }
-
-        // Inicializar a lista de vídeos
-        var listaVideos = carregarListaVideos();
-
-        function exibirLista() {
-            var lista = document.getElementById('lista-videos');
-            lista.innerHTML = '';
+        window.addEventListener('message', function (e) {
+            // Atualiza a lista de vídeos com os dados recebidos
+            var listaVideos = JSON.parse(e.data);
+            var lista = document.createElement('ul');
 
             listaVideos.forEach(function (video, index) {
                 var itemLista = document.createElement('li');
@@ -28,9 +20,11 @@
                 `;
                 lista.appendChild(itemLista);
             });
-        }
 
-        exibirLista();
+            var container = document.body;
+            container.innerHTML = ''; // Limpa qualquer conteúdo anterior
+            container.appendChild(lista);
+        });
     </script>
 </body>
 </html>
