@@ -6,29 +6,5 @@
 <body>
     <h1>Lista de Vídeos</h1>
     <ul id="lista-videos"></ul>
-    
-    <script>
-        function carregarListaVideos() {
-            var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
-            return lista;
-        }
-
-        var listaVideos = carregarListaVideos();
-
-        function exibirLista() {
-            var lista = document.getElementById('lista-videos');
-            lista.innerHTML = '';
-
-            listaVideos.forEach(function (video, index) {
-                var itemLista = document.createElement('li');
-                itemLista.innerHTML = `
-                    <a href="${video}" target="_blank">${video}</a>
-                `;
-                lista.appendChild(itemLista);
-            });
-        }
-
-        exibirLista();
-    </script>
 </body>
 </html>
