@@ -2,18 +2,17 @@
 <html>
 <head>
     <title>ADM</title>
-    <script src="videos.js"></script>
 </head>
 <body>
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
-    <button onclick="salvarListaVideos()">Salvar Lista</button>
     <ul id="lista-videos"></ul>
+    <button onclick="salvarLista()">Salvar Lista</button>
     
-    <!-- Link para abrir o arquivo player.html (caminho relativo) -->
-    <a href="player.html" target="_blank">Abrir player.html</a>
-
+    <!-- Botão "PLAYER" para abrir o arquivo player.html (caminho relativo) -->
+    <a href="player.html" target="_blank" class="player-button">PLAYER</a>
+    
     <script>
         // Função para carregar a lista de vídeos do armazenamento local
         function carregarListaVideos() {
@@ -22,8 +21,8 @@
         }
 
         // Função para salvar a lista de vídeos no armazenamento local
-        function salvarListaVideos() {
-            localStorage.setItem('listaVideos', JSON.stringify(listaVideos));
+        function salvarListaVideos(lista) {
+            localStorage.setItem('listaVideos', JSON.stringify(lista));
         }
 
         // Inicializar a lista de vídeos
@@ -33,6 +32,7 @@
             var link = document.getElementById('video-link').value;
             if (link) {
                 listaVideos.push(link);
+                salvarListaVideos(listaVideos);
                 exibirLista();
                 document.getElementById('video-link').value = '';
             }
@@ -57,6 +57,7 @@
         function excluirVideo(index) {
             if (index >= 0 && index < listaVideos.length) {
                 listaVideos.splice(index, 1);
+                salvarListaVideos(listaVideos);
                 exibirLista();
             }
         }
@@ -67,9 +68,15 @@
                 if (newIndex >= 0 && newIndex < listaVideos.length) {
                     var movedItem = listaVideos.splice(index, 1)[0];
                     listaVideos.splice(newIndex, 0, movedItem);
+                    salvarListaVideos(listaVideos);
                     exibirLista();
                 }
             }
+        }
+
+        // Função para salvar a lista atual
+        function salvarLista() {
+            salvarListaVideos(listaVideos);
         }
 
         exibirLista();
@@ -91,6 +98,18 @@
             border: none;
             padding: 5px 10px;
             cursor: pointer;
+        }
+
+        /* Estilos para o botão "PLAYER" */
+        .player-button {
+            position: absolute;
+            top: 10px; /* Distância do topo */
+            right: 10px; /* Distância da direita */
+            background-color: #dc3545; /* Cor de fundo vermelha */
+            color: black; /* Cor do texto preto */
+            font-weight: bold; /* Texto em negrito */
+            padding: 10px 20px; /* Espaçamento interno */
+            text-decoration: none; /* Remove sublinhado padrão de links */
         }
     </style>
 </body>
