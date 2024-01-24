@@ -61,13 +61,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: blue;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+            background-image: url(start.png); /* Substitua pelo caminho da sua imagem */
+            background-size: contain;
+            width: 320px; /* Largura do botão, ajuste conforme necessário */
+            height: 320px; /* Altura do botão, ajuste conforme necessário */
             cursor: pointer;
             z-index: 9999; /* Define uma alta camada z-index para o botão ficar no topo */
             pointer-events: auto; /* Permite cliques no botão */
+            display: none; /* Inicialmente oculto até o vídeo estar pronto */
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -79,9 +80,7 @@
         <div id="player"></div>
         <div class="bottom-bar"></div> <!-- Faixa preta inferior -->
         <div id="overlay"></div> <!-- Elemento semitransparente -->
-        <button id="start-button" onclick="iniciarVideo()">Iniciar Vídeo</button>
-    </div>
-
+        <div id="start-button" onclick="iniciarVideo()"></div> 
     <script>
         var player;
         var currentIndex = 0;
@@ -155,6 +154,7 @@
         // Função para iniciar o vídeo manualmente e ocultar o botão
         function iniciarVideo() {
             player.playVideo();
+            document.getElementById('start-button').style.display = 'none';
         }
     </script>
 </body>
