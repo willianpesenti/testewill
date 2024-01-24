@@ -7,11 +7,14 @@
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
-    <ul id="lista-videos"></ul>
-    <button onclick="salvarLista()">Salvar Lista</button>
-    
+
     <!-- Botão "PLAYER" para abrir o arquivo player.html (caminho relativo) -->
     <a href="player.html" target="_blank" class="player-button">PLAYER</a>
+
+    <!-- Div oculta para conter a lista de vídeos -->
+    <div id="lista-videos" style="display: none;"></div>
+
+    <button onclick="salvarLista()">Salvar Lista</button>
     
     <script>
         // Função para carregar a lista de vídeos do armazenamento local
