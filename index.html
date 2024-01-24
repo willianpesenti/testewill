@@ -11,24 +11,21 @@
     <!-- Botão "PLAYER" para abrir o arquivo player.html (caminho relativo) -->
     <a href="player.html" target="_blank" class="player-button">PLAYER</a>
 
-    <!-- Div oculta para conter a lista de vídeos -->
-    <div id="lista-videos" style="display: none;"></div>
-
     <button onclick="salvarLista()">Salvar Lista</button>
     
+    <!-- Lista de vídeos -->
+    <ul id="lista-videos"></ul>
+
     <script>
-        // Função para carregar a lista de vídeos do armazenamento local
         function carregarListaVideos() {
             var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
             return lista;
         }
 
-        // Função para salvar a lista de vídeos no armazenamento local
         function salvarListaVideos(lista) {
             localStorage.setItem('listaVideos', JSON.stringify(lista));
         }
 
-        // Inicializar a lista de vídeos
         var listaVideos = carregarListaVideos();
 
         function adicionarVideo() {
@@ -77,7 +74,6 @@
             }
         }
 
-        // Função para salvar a lista atual
         function salvarLista() {
             salvarListaVideos(listaVideos);
         }
@@ -103,16 +99,16 @@
             cursor: pointer;
         }
 
-        /* Estilos para o botão "PLAYER" */
+        /* Estilos para os botões */
         .player-button {
             position: absolute;
-            top: 10px; /* Distância do topo */
-            right: 10px; /* Distância da direita */
-            background-color: #dc3545; /* Cor de fundo vermelha */
-            color: black; /* Cor do texto preto */
-            font-weight: bold; /* Texto em negrito */
-            padding: 10px 20px; /* Espaçamento interno */
-            text-decoration: none; /* Remove sublinhado padrão de links */
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: black;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-decoration: none;
         }
     </style>
 </body>
