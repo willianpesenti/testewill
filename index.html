@@ -8,6 +8,7 @@
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
+    <button onclick="salvarListaVideos()">Salvar Lista</button>
     <ul id="lista-videos"></ul>
     
     <!-- Link para abrir o arquivo player.html (caminho relativo) -->
@@ -21,8 +22,8 @@
         }
 
         // Função para salvar a lista de vídeos no armazenamento local
-        function salvarListaVideos(lista) {
-            localStorage.setItem('listaVideos', JSON.stringify(lista));
+        function salvarListaVideos() {
+            localStorage.setItem('listaVideos', JSON.stringify(listaVideos));
         }
 
         // Inicializar a lista de vídeos
@@ -32,7 +33,6 @@
             var link = document.getElementById('video-link').value;
             if (link) {
                 listaVideos.push(link);
-                salvarListaVideos(listaVideos);
                 exibirLista();
                 document.getElementById('video-link').value = '';
             }
@@ -57,7 +57,6 @@
         function excluirVideo(index) {
             if (index >= 0 && index < listaVideos.length) {
                 listaVideos.splice(index, 1);
-                salvarListaVideos(listaVideos);
                 exibirLista();
             }
         }
@@ -68,7 +67,6 @@
                 if (newIndex >= 0 && newIndex < listaVideos.length) {
                     var movedItem = listaVideos.splice(index, 1)[0];
                     listaVideos.splice(newIndex, 0, movedItem);
-                    salvarListaVideos(listaVideos);
                     exibirLista();
                 }
             }
