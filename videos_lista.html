@@ -8,13 +8,11 @@
     <ul id="lista-videos"></ul>
     
     <script>
-        // Função para carregar a lista de vídeos do armazenamento local
         function carregarListaVideos() {
             var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
             return lista;
         }
 
-        // Inicializar a lista de vídeos
         var listaVideos = carregarListaVideos();
 
         function exibirLista() {
