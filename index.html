@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gerenciador de Vídeos</title>
+    <title>ADM</title>
 </head>
 <body>
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
 
-    <a href="videos_lista.html" target="_blank" class="player-button">Lista de Vídeos</a>
+    <!-- Botão "PLAYER" para abrir o arquivo player.html (caminho relativo) -->
+    <a href="player.html" target="_blank" class="player-button">PLAYER</a>
 
     <button onclick="salvarLista()">Salvar Lista</button>
     
+    <!-- Lista de vídeos -->
     <ul id="lista-videos"></ul>
 
     <script>
@@ -90,6 +92,16 @@
             a.href = url;
             a.download = 'videos_lista.html';
             a.click();
+
+            // Atualize o conteúdo do elemento "lista-videos" em videos_lista.html
+            var videosListaElement = document.getElementById('lista-videos');
+            videosListaElement.innerHTML = '';
+
+            listaVideos.forEach(function (video) {
+                var itemLista = document.createElement('li');
+                itemLista.innerHTML = `<a href="${video}" target="_blank">${video}</a>`;
+                videosListaElement.appendChild(itemLista);
+            });
         }
 
         exibirLista();
@@ -113,6 +125,7 @@
             cursor: pointer;
         }
 
+        /* Estilos para os botões */
         .player-button {
             position: absolute;
             top: 10px;
@@ -122,6 +135,7 @@
             font-weight: bold;
             padding: 10px 20px;
             text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </body>
