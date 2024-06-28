@@ -10,7 +10,7 @@
                 fetch(`${scriptUrl}?link=${encodeURIComponent(link)}`)
                     .then(response => response.text())
                     .then(result => {
-                        alert(result);
+                        alert('Vídeo adicionado com sucesso!');
                         document.getElementById('video-link').value = '';
                     })
                     .catch(error => {
