@@ -2,134 +2,27 @@
 <html>
 <head>
     <title>ADM</title>
+    <script>
+        function adicionarVideo() {
+            const link = document.getElementById('video-link').value;
+            if (link) {
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbxGVcoeFIwANV-Eatu2P0jwAwZOHaJxcBZGC8ZR7z9v_T4fkY3Janlg-8KgUKnB5QkiEg/exec';
+                fetch(`${scriptUrl}?link=${encodeURIComponent(link)}`)
+                    .then(response => response.text())
+                    .then(result => {
+                        alert(result);
+                        document.getElementById('video-link').value = '';
+                    })
+                    .catch(error => {
+                        console.error('Erro ao adicionar vídeo:', error);
+                    });
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
-
-    <!-- Botão "PLAYER" para abrir o arquivo player.html (caminho relativo) -->
-    <a href="player.html" target="_blank" class="player-button">PLAYER</a>
-
-    <button onclick="salvarLista()">Salvar Lista</button>
-    
-    <!-- Lista de vídeos -->
-    <ul id="lista-videos"></ul>
-
-    <script>
-        var listaVideos = [];
-
-        function carregarListaVideos() {
-            var lista = JSON.parse(localStorage.getItem('listaVideos')) || [];
-            return lista;
-        }
-
-        function salvarListaVideos(lista) {
-            localStorage.setItem('listaVideos', JSON.stringify(lista));
-        }
-
-        listaVideos = carregarListaVideos();
-
-        function adicionarVideo() {
-            var link = document.getElementById('video-link').value;
-            if (link) {
-                listaVideos.push(link);
-                salvarListaVideos(listaVideos);
-                exibirLista();
-                document.getElementById('video-link').value = '';
-            }
-        }
-
-        function exibirLista() {
-            var lista = document.getElementById('lista-videos');
-            lista.innerHTML = '';
-
-            listaVideos.forEach(function (video, index) {
-                var itemLista = document.createElement('li');
-                itemLista.innerHTML = `
-                    <a href="${video}" target="_blank">${video}</a>
-                    <button class="move-up" onclick="moverVideo(${index}, -1)">▲</button>
-                    <button class="move-down" onclick="moverVideo(${index}, 1)">▼</button>
-                    <button class="delete-button" onclick="excluirVideo(${index})">Excluir</button>
-                `;
-                lista.appendChild(itemLista);
-            });
-        }
-
-        function excluirVideo(index) {
-            if (index >= 0 && index < listaVideos.length) {
-                listaVideos.splice(index, 1);
-                salvarListaVideos(listaVideos);
-                exibirLista();
-            }
-        }
-
-        function moverVideo(index, direction) {
-            if (index >= 0 && index < listaVideos.length) {
-                var newIndex = index + direction;
-                if (newIndex >= 0 && newIndex < listaVideos.length) {
-                    var movedItem = listaVideos.splice(index, 1)[0];
-                    listaVideos.splice(newIndex, 0, movedItem);
-                    salvarListaVideos(listaVideos);
-                    exibirLista();
-                }
-            }
-        }
-
-        function salvarLista() {
-            var videosListaHTML = '<!DOCTYPE html>\n<html>\n<head>\n    <title>Lista de Vídeos</title>\n</head>\n<body>\n<h1>Lista de Vídeos</h1>\n<ul>';
-
-            listaVideos.forEach(function (video) {
-                videosListaHTML += `\n    <li><a href="${video}" target="_blank">${video}</a></li>`;
-            });
-
-            videosListaHTML += '\n</ul>\n</body>\n</html>';
-
-            var blob = new Blob([videosListaHTML], { type: 'text/html' });
-            var url = URL.createObjectURL(blob);
-
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'videos_lista.html';
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        exibirLista();
-    </script>
-    
-    <style>
-        .move-up,
-        .move-down {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .delete-button {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        /* Estilos para os botões */
-        .player-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #dc3545;
-            color: black;
-            font-weight: bold;
-            padding: 10px 20px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
 </body>
 </html>
