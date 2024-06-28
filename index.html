@@ -10,7 +10,7 @@
                 fetch(`${scriptUrl}?link=${encodeURIComponent(link)}`)
                     .then(response => response.text())
                     .then(result => {
-                        alert(result);
+                        alert('Vídeo adicionado com sucesso!');
                         document.getElementById('video-link').value = '';
                     })
                     .catch(error => {
@@ -24,5 +24,34 @@
     <h1>Gerenciador de Vídeos</h1>
     <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
     <button onclick="adicionarVideo()">Adicionar</button>
+    <ul id="lista-videos"></ul>
+
+    <script>
+        const SHEET_ID = '1bc-gR4xoI3WnUDMho55-R555ag-Gb6B4ww4erlsfEuY';
+        const SHEET_URL = `https://spreadsheets.google.com/feeds/list/${SHEET_ID}/od6/public/values?alt=json`;
+
+        function carregarListaVideos() {
+            fetch(SHEET_URL)
+                .then(response => response.json())
+                .then(data => {
+                    const entries = data.feed.entry;
+                    const listaVideos = entries.map(entry => entry.gsx$link.$t);
+                    exibirLista(listaVideos);
+                })
+                .catch(error => console.error('Erro ao carregar lista de vídeos:', error));
+        }
+
+        function exibirLista(listaVideos) {
+            const lista = document.getElementById('lista-videos');
+            lista.innerHTML = '';
+            listaVideos.forEach(video => {
+                const item = document.createElement('li');
+                item.textContent = video;
+                lista.appendChild(item);
+            });
+        }
+
+        window.onload = carregarListaVideos;
+    </script>
 </body>
 </html>
