@@ -47,6 +47,7 @@
 </head>
 <body>
     <div id="player-container">
+        <h1 style="color: white;">Vídeo em Tela Cheia</h1>
         <div id="player"></div>
         <div id="start-button" onclick="iniciarVideo()"></div>
     </div>
@@ -107,7 +108,6 @@
         }
 
         function iniciarVideo() {
-            var videoId = player.getVideoData().video_id;
             player.playVideo();
             document.getElementById('start-button').style.display = 'none';
         }
