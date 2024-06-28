@@ -4,76 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Player</title>
-    <style>
-        #start-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: blue;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            background-image: url(start.png); /* Substitua pelo caminho da sua imagem */
-            background-size: contain;
-            width: 320px; /* Largura do botão, ajuste conforme necessário */
-            height: 320px; /* Altura do botão, ajuste conforme necessário */
-            cursor: pointer;
-            z-index: 9999; /* Define uma alta camada z-index para o botão ficar no topo */
-            pointer-events: auto; /* Permite cliques no botão */
-            display: none; /* Inicialmente oculto até o vídeo estar pronto */
-        }
-    </style>
     <script src="https://www.youtube.com/iframe_api"></script>
-</head>
-<body>
-    <div id="player-container">
-        <h1 style="color: white;">Vídeo em Tela Cheia</h1>
-        <div id="player"></div>
-        <div class="bottom-bar"></div> <!-- Faixa preta inferior -->
-        <div id="overlay"></div> <!-- Elemento semitransparente -->
-        <div id="start-button" onclick="iniciarVideo()"></div> 
-    </div>
     <script>
         var player;
-        var playedVideos = [];
         var currentIndex = 0;
+        var listaVideos = [];
+        const SHEET_ID = '1bc-gR4xoI3WnUDMho55-R555ag-Gb6B4ww4erlsfEuY';
+        const SHEET_URL = `https://spreadsheets.google.com/feeds/list/${SHEET_ID}/od6/public/values?alt=json`;
+
+        function carregarListaVideos() {
+            fetch(SHEET_URL)
+                .then(response => response.json())
+                .then(data => {
+                    const entries = data.feed.entry;
+                    listaVideos = entries.map(entry => entry.gsx$links.$t);
+                    inicializarPlayer();
+                }).catch(error => {
+                    console.error('Erro ao carregar lista de vídeos:', error);
+                });
+        }
+
+        function getVideoId(url) {
+            const videoId = url.split('v=')[1];
+            const ampersandPosition = videoId.indexOf('&');
+            return ampersandPosition != -1 ? videoId.substring(0, ampersandPosition) : videoId;
+        }
+
+        function inicializarPlayer() {
+            if (listaVideos.length > 0) {
+                player = new YT.Player('player', {
+                    height: '360',
+                    width: '640',
+                    videoId: getVideoId(listaVideos[currentIndex]),
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+        }
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '360',
-                width: '640',
-                videoId: 'VIDEO_ID_INICIAL', // Substitua pelo ID do vídeo inicial
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+            carregarListaVideos();
         }
 
         function onPlayerReady(event) {
-            document.getElementById('start-button').style.display = 'block';
+            player.playVideo();
         }
 
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED) {
-                // Vídeo terminou
+                currentIndex++;
+                if (currentIndex < listaVideos.length) {
+                    player.loadVideoById(getVideoId(listaVideos[currentIndex]));
+                }
             }
         }
 
-        function iniciarVideo() {
-            var videoId = player.getVideoData().video_id;
-            if (!playedVideos.includes(videoId)) {
-                playedVideos.push(videoId);
-            }
-            player.playVideo();
-            document.getElementById('start-button').style.display = 'none';
-        }
-
-        function showPlayedVideos() {
-            console.log("Vídeos reproduzidos:", playedVideos);
-            // Você pode adicionar código aqui para exibir os vídeos em algum lugar da página, se desejar.
-        }
+        window.onload = carregarListaVideos;
     </script>
+</head>
+<body>
+    <div id="player-container">
+        <div id="player"></div>
+    </div>
 </body>
 </html>
