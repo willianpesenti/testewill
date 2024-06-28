@@ -4,7 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Player</title>
+    <style>
+        #start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            background-image: url(start.png); /* Substitua pelo caminho da sua imagem */
+            background-size: contain;
+            width: 320px; /* Largura do botão, ajuste conforme necessário */
+            height: 320px; /* Altura do botão, ajuste conforme necessário */
+            cursor: pointer;
+            z-index: 9999; /* Define uma alta camada z-index para o botão ficar no topo */
+            pointer-events: auto; /* Permite cliques no botão */
+            display: none; /* Inicialmente oculto até o vídeo estar pronto */
+        }
+    </style>
     <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <div id="player-container">
+        <h1 style="color: white;">Vídeo em Tela Cheia</h1>
+        <div id="player"></div>
+        <div class="bottom-bar"></div> <!-- Faixa preta inferior -->
+        <div id="overlay"></div> <!-- Elemento semitransparente -->
+        <div id="start-button" onclick="iniciarVideo()"></div> 
+    </div>
     <script>
         var player;
         var currentIndex = 0;
@@ -17,7 +46,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const entries = data.feed.entry;
-                    listaVideos = entries.map(entry => entry.gsx$links.$t);
+                    listaVideos = entries.map(entry => entry.gsx$link.$t);
                     inicializarPlayer();
                 }).catch(error => {
                     console.error('Erro ao carregar lista de vídeos:', error);
@@ -51,22 +80,3 @@
         function onPlayerReady(event) {
             player.playVideo();
         }
-
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.ENDED) {
-                currentIndex++;
-                if (currentIndex < listaVideos.length) {
-                    player.loadVideoById(getVideoId(listaVideos[currentIndex]));
-                }
-            }
-        }
-
-        window.onload = carregarListaVideos;
-    </script>
-</head>
-<body>
-    <div id="player-container">
-        <div id="player"></div>
-    </div>
-</body>
-</html>
