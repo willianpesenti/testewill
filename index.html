@@ -1,57 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ADM</title>
-    <script>
-        function adicionarVideo() {
-            const link = document.getElementById('video-link').value;
-            if (link) {
-                const scriptUrl = 'https://script.google.com/macros/s/AKfycbxGVcoeFIwANV-Eatu2P0jwAwZOHaJxcBZGC8ZR7z9v_T4fkY3Janlg-8KgUKnB5QkiEg/exec';
-                fetch(`${scriptUrl}?link=${encodeURIComponent(link)}`)
-                    .then(response => response.text())
-                    .then(result => {
-                        alert('Vídeo adicionado com sucesso!');
-                        document.getElementById('video-link').value = '';
-                    })
-                    .catch(error => {
-                        console.error('Erro ao adicionar vídeo:', error);
-                    });
-            }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        #start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            background-image: url(start.png); /* Substitua pelo caminho da sua imagem */
+            background-size: contain;
+            width: 320px; /* Largura do botão, ajuste conforme necessário */
+            height: 320px; /* Altura do botão, ajuste conforme necessário */
+            cursor: pointer;
+            z-index: 9999; /* Define uma alta camada z-index para o botão ficar no topo */
+            pointer-events: auto; /* Permite cliques no botão */
+            display: none; /* Inicialmente oculto até o vídeo estar pronto */
         }
-    </script>
+    </style>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
-    <h1>Gerenciador de Vídeos</h1>
-    <input type="text" id="video-link" placeholder="Cole o link do vídeo do YouTube">
-    <button onclick="adicionarVideo()">Adicionar</button>
-    <ul id="lista-videos"></ul>
-
+    <div id="player-container">
+        <h1 style="color: white;">Vídeo em Tela Cheia</h1>
+        <div id="player"></div>
+        <div class="bottom-bar"></div> <!-- Faixa preta inferior -->
+        <div id="overlay"></div> <!-- Elemento semitransparente -->
+        <div id="start-button" onclick="iniciarVideo()"></div> 
+    </div>
     <script>
-        const SHEET_ID = '1bc-gR4xoI3WnUDMho55-R555ag-Gb6B4ww4erlsfEuY';
-        const SHEET_URL = `https://spreadsheets.google.com/feeds/list/${SHEET_ID}/od6/public/values?alt=json`;
+        var player;
+        var playedVideos = [];
+        var currentIndex = 0;
 
-        function carregarListaVideos() {
-            fetch(SHEET_URL)
-                .then(response => response.json())
-                .then(data => {
-                    const entries = data.feed.entry;
-                    const listaVideos = entries.map(entry => entry.gsx$link.$t);
-                    exibirLista(listaVideos);
-                })
-                .catch(error => console.error('Erro ao carregar lista de vídeos:', error));
-        }
-
-        function exibirLista(listaVideos) {
-            const lista = document.getElementById('lista-videos');
-            lista.innerHTML = '';
-            listaVideos.forEach(video => {
-                const item = document.createElement('li');
-                item.textContent = video;
-                lista.appendChild(item);
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '360',
+                width: '640',
+                videoId: 'VIDEO_ID_INICIAL', // Substitua pelo ID do vídeo inicial
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
             });
         }
 
-        window.onload = carregarListaVideos;
+        function onPlayerReady(event) {
+            document.getElementById('start-button').style.display = 'block';
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                // Vídeo terminou
+            }
+        }
+
+        function iniciarVideo() {
+            var videoId = player.getVideoData().video_id;
+            if (!playedVideos.includes(videoId)) {
+                playedVideos.push(videoId);
+            }
+            player.playVideo();
+            document.getElementById('start-button').style.display = 'none';
+        }
+
+        function showPlayedVideos() {
+            console.log("Vídeos reproduzidos:", playedVideos);
+            // Você pode adicionar código aqui para exibir os vídeos em algum lugar da página, se desejar.
+        }
     </script>
 </body>
 </html>
